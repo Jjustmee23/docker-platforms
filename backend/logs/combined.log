@@ -1489,3 +1489,6 @@
 {"level":"info","message":"::1 - - [23/Jul/2025:21:54:03 +0000] \"GET /health HTTP/1.1\" 200 77 \"-\" \"curl/8.12.1\"","timestamp":"2025-07-23T21:54:03.337Z"}
 {"level":"info","message":"::ffff:172.19.0.6 - - [23/Jul/2025:21:54:07 +0000] \"GET /metrics HTTP/1.1\" 404 27 \"-\" \"Prometheus/3.5.0\"","timestamp":"2025-07-23T21:54:07.672Z"}
 {"level":"info","message":"::ffff:172.19.0.6 - - [23/Jul/2025:21:54:17 +0000] \"GET /metrics HTTP/1.1\" 404 27 \"-\" \"Prometheus/3.5.0\"","timestamp":"2025-07-23T21:54:17.671Z"}
+{"level":"info","message":"::ffff:172.19.0.6 - - [23/Jul/2025:21:54:27 +0000] \"GET /metrics HTTP/1.1\" 404 27 \"-\" \"Prometheus/3.5.0\"","timestamp":"2025-07-23T21:54:27.713Z"}
+{"address":"/var/run/docker.sock","code":"EACCES","errno":-13,"level":"error","message":"Error collecting metrics: connect EACCES /var/run/docker.sock","stack":"Error: connect EACCES /var/run/docker.sock\n    at PipeConnectWrap.afterConnect [as oncomplete] (node:net:1555:16)","syscall":"connect","timestamp":"2025-07-23T21:54:30.150Z"}
+{"level":"info","message":"::1 - - [23/Jul/2025:21:54:33 +0000] \"GET /health HTTP/1.1\" 200 77 \"-\" \"curl/8.12.1\"","timestamp":"2025-07-23T21:54:33.415Z"}
