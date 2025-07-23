@@ -1,0 +1,24 @@
+{
+  "name": "docker-platform-database-setup",
+  "version": "1.0.0",
+  "description": "Database setup script for Docker Platform",
+  "main": "setup-database.js",
+  "scripts": {
+    "setup-db": "node setup-database.js",
+    "test-db": "node test-database.js",
+    "backup-db": "node backup-database.js",
+    "restore-db": "node restore-database.js",
+    "install-pg": "npm install pg"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "keywords": [
+    "postgresql",
+    "database",
+    "setup",
+    "docker"
+  ],
+  "author": "Docker Platform Team",
+  "license": "MIT"
+} 
