@@ -101,14 +101,10 @@ log "Installing Node.js..."
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt install -y nodejs
 
-# Install PostgreSQL (if not using external database)
-log "Installing PostgreSQL..."
-apt install -y postgresql postgresql-contrib
-
-# Configure PostgreSQL
-sudo -u postgres psql -c "CREATE USER danny WITH PASSWORD 'Jjustmee12773';"
-sudo -u postgres psql -c "CREATE DATABASE docker_platform OWNER danny;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE docker_platform TO danny;"
+# Configure external PostgreSQL database
+log "Configuring external PostgreSQL database..."
+# Note: Using external database at 45.154.238.111
+# User: danny, Password: Jjustmee12773
 
 # Configure firewall
 log "Configuring firewall..."
@@ -152,15 +148,9 @@ log "Creating application directory..."
 mkdir -p /opt/docker-platform
 cd /opt/docker-platform
 
-# Clone the repository (you'll need to provide the repository URL)
-log "Please provide your GitHub repository URL:"
-read -p "GitHub repository URL: " REPO_URL
-
-if [ -n "$REPO_URL" ]; then
-    git clone $REPO_URL .
-else
-    log "No repository URL provided. Please clone your repository manually to /opt/docker-platform"
-fi
+# Clone the repository
+log "Cloning GitHub repository..."
+git clone https://github.com/Jjustmee23/docker-platforms.git .
 
 # Create environment file
 log "Creating environment configuration..."
@@ -170,7 +160,7 @@ NODE_ENV=production
 PORT=8000
 
 # Database Configuration
-DATABASE_URL=postgresql://danny:Jjustmee12773@localhost:5432/docker_platform
+DATABASE_URL=postgresql://danny:Jjustmee12773@45.154.238.111:5432/docker_platform
 REDIS_URL=redis://redis:6379
 
 # Security

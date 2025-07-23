@@ -15,7 +15,7 @@
 ssh root@45.154.238.100
 
 # Download and run the setup script
-wget https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/setup-vps.sh
+wget https://raw.githubusercontent.com/Jjustmee23/docker-platforms/main/setup-vps.sh
 chmod +x setup-vps.sh
 ./setup-vps.sh
 ```
@@ -47,13 +47,13 @@ chmod +x /usr/local/bin/docker-compose
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt install -y nodejs
 
-# Install PostgreSQL
-apt install -y postgresql postgresql-contrib
+# Test external database connection
+echo "Testing external database connection..."
+apt install -y postgresql-client netcat
 
-# Configure PostgreSQL
-sudo -u postgres psql -c "CREATE USER danny WITH PASSWORD 'Jjustmee12773';"
-sudo -u postgres psql -c "CREATE DATABASE docker_platform OWNER danny;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE docker_platform TO danny;"
+# Test database connectivity
+nc -zv 45.154.238.111 5432
+PGPASSWORD=Jjustmee12773 psql -h 45.154.238.111 -U danny -d docker_platform -c "SELECT version();"
 
 # Configure firewall
 ufw --force reset
@@ -99,7 +99,7 @@ mkdir -p /opt/docker-platform
 cd /opt/docker-platform
 
 # Clone your repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git .
+git clone https://github.com/Jjustmee23/docker-platforms.git .
 
 # Create environment file
 cp env.example .env

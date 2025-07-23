@@ -25,6 +25,7 @@ services:
       - DB_NAME=docker_platform
       - DB_USER=danny
       - DB_PASSWORD=Jjustmee12773
+      - DATABASE_URL=postgresql://danny:Jjustmee12773@45.154.238.111:5432/docker_platform
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production
       - FRONTEND_URL=http://localhost
