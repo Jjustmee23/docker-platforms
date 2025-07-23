@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy webhook handler
+COPY webhook-handler.js .
+
+# Install dependencies (minimal for webhook handler)
+RUN npm init -y && \
+    npm install
+
+# Create log directory
+RUN mkdir -p /opt/docker-platform
+
+# Expose port
+EXPOSE 3001
+
+# Start webhook handler
+CMD ["node", "webhook-handler.js"] 

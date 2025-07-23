@@ -4,8 +4,6 @@ services:
     image: redis:7-alpine
     container_name: docker-platform-redis
     restart: unless-stopped
-    ports:
-      - "6380:6379"
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
@@ -19,10 +17,6 @@ services:
       dockerfile: Dockerfile
     container_name: docker-platform-backend
     restart: unless-stopped
-    ports:
-      - "8000:8000"
-    expose:
-      - "8000"
     environment:
       - NODE_ENV=production
       - PORT=8000
@@ -49,10 +43,6 @@ services:
       dockerfile: Dockerfile.prod
     container_name: docker-platform-frontend
     restart: unless-stopped
-    ports:
-      - "3003:3000"
-    expose:
-      - "3000"
     environment:
       - REACT_APP_API_URL=http://localhost/api
       - REACT_APP_WS_URL=ws://localhost
@@ -86,8 +76,6 @@ services:
     image: prom/prometheus:latest
     container_name: docker-platform-prometheus
     restart: unless-stopped
-    expose:
-      - "9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -106,8 +94,6 @@ services:
     image: grafana/grafana:latest
     container_name: docker-platform-grafana
     restart: unless-stopped
-    expose:
-      - "3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
@@ -115,6 +101,23 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
+    networks:
+      - docker-platform
+
+  # Webhook Handler
+  webhook:
+    build:
+      context: .
+      dockerfile: Dockerfile.webhook
+    container_name: docker-platform-webhook
+    restart: unless-stopped
+    environment:
+      - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET}
+      - WEBHOOK_PORT=3001
+    volumes:
+      - /opt/docker-platform:/opt/docker-platform
+    depends_on:
+      - backend
     networks:
       - docker-platform
 
