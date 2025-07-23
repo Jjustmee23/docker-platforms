@@ -2,11 +2,7 @@ import axios from 'axios';
 
 // Determine API base URL based on environment
 const getApiBaseUrl = () => {
-  // If running in development (localhost:3000), use direct backend connection
-  if (window.location.hostname === 'localhost' && window.location.port === '3000') {
-    return 'http://localhost:8000/api';
-  }
-  // In production or when served through nginx, use relative path
+  // Always use relative path when served through nginx proxy
   return '/api';
 };
 
