@@ -1,9 +1,9 @@
-const http = require('http');
+const https = require('https');
 
 // Test webhook endpoint
 const options = {
-  hostname: 'localhost',
-  port: 80,
+  hostname: 'soft.nexonsolutions.be',
+  port: 443,
   path: '/webhook',
   method: 'POST',
   headers: {
