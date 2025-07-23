@@ -32,8 +32,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./backend/logs:/app/logs
-    group_add:
-      - 999
     depends_on:
       - redis
     networks:
