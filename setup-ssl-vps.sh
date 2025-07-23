@@ -5,18 +5,26 @@
 
 echo "🔐 Setting up SSL certificates for VPS..."
 
-# Check if domain is accessible
-echo "🌐 Checking domain accessibility..."
-if ! curl -s -o /dev/null -w "%{http_code}" http://soft.nexonsolutions.be | grep -q "200\|301\|302"; then
-    echo "❌ Domain soft.nexonsolutions.be is not accessible from the internet"
-    echo "📋 Please ensure:"
-    echo "   1. DNS A record points to this server's IP"
-    echo "   2. Port 80 is open in firewall"
-    echo "   3. Domain is accessible from internet"
-    exit 1
-fi
+# Get server IP
+SERVER_IP=$(curl -s ifconfig.me)
+echo "🌐 Server IP: $SERVER_IP"
 
-echo "✅ Domain is accessible"
+# Check if domain is accessible (but don't fail if it's not)
+echo "🌐 Checking domain accessibility..."
+DOMAIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://soft.nexonsolutions.be 2>/dev/null || echo "000")
+
+if [ "$DOMAIN_STATUS" = "000" ] || [ "$DOMAIN_STATUS" = "000" ]; then
+    echo "⚠️  Domain soft.nexonsolutions.be is not accessible from the internet"
+    echo "📋 This might be due to:"
+    echo "   1. DNS A record not pointing to $SERVER_IP"
+    echo "   2. Port 80 not open in firewall"
+    echo "   3. Domain not propagated yet"
+    echo ""
+    echo "🔧 Attempting SSL setup anyway (this may work if DNS is configured)..."
+    echo ""
+else
+    echo "✅ Domain is accessible (HTTP $DOMAIN_STATUS)"
+fi
 
 # Stop nginx temporarily
 echo "🛑 Stopping nginx..."
@@ -100,14 +108,19 @@ if [ -d "letsencrypt/live/soft.nexonsolutions.be" ]; then
     
 else
     echo "❌ Failed to generate SSL certificates!"
-    echo "🔍 Please check:"
-    echo "   1. Domain DNS configuration"
-    echo "   2. Firewall settings (port 80)"
-    echo "   3. Server accessibility"
+    echo "🔍 Troubleshooting steps:"
+    echo "   1. Ensure DNS A record for soft.nexonsolutions.be points to: $SERVER_IP"
+    echo "   2. Open port 80 in firewall: ufw allow 80"
+    echo "   3. Wait for DNS propagation (can take up to 24 hours)"
+    echo "   4. Check if domain is accessible: curl -I http://soft.nexonsolutions.be"
     
     # Cleanup
     docker-compose stop nginx
     sed -i 's|./nginx/nginx-temp.conf:/etc/nginx/nginx.conf:ro|./nginx/nginx.conf:/etc/nginx/nginx.conf:ro|g' docker-compose.yml
     rm -f nginx/nginx-temp.conf
+    
+    echo ""
+    echo "🔄 Restarting services without SSL..."
+    docker-compose up -d
     exit 1
 fi 
